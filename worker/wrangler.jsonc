@@ -1,0 +1,6 @@
+{
+  "name": "ai-stock-watcher-api",
+  "main": "index.js",
+  "compatibility_date": "2026-11-17",
+  "workers_dev": true
+}
