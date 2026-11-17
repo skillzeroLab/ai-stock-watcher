@@ -1,30 +1,48 @@
-# AI Stock Watcher｜台股小幫手
+# AI 台股觀察員｜簡易操作說明
 
-課堂作業：以 `AGENTS.md` 規範 AI 後續開發，建立使用 TWSE OpenAPI + Gemini API 的台股觀察網站。
+**網站網址：** https://skillzerolab.github.io/ai-stock-watcher/
 
-## 功能
-- 自選股：股票代碼新增/移除，使用瀏覽器 localStorage 保存。
-- 價格提醒：輸入高於/低於指定價格，僅於網站載入或手動更新時檢查。
-- 行情查詢：部署 Worker 後取得 TWSE 每日資料，非即時行情。
-- AI 對話：部署 Worker 並設定 Gemini Key 後啟用；未設定時會明確提示。
+本網站結合臺灣證券交易所 OpenAPI 與 Gemini AI，讓使用者可以透過聊天方式查詢股票行情，也能建立自己的觀察清單與價格提醒條件。
 
-## 部署
-1. 將 `index.html`, `css/`, `js/`, `worker/`, `AGENTS.md`, `README.md` 上傳 GitHub Repository。
-2. 在 GitHub → Settings → Pages，選擇 Deploy from branch / main / root。
-3. Cloudflare Worker（需 Node.js / Wrangler）：在 `worker/wrangler.toml` 把 `SITE_ORIGIN` 改成實際 GitHub Pages 網站**來源**（例如 `https://username.github.io`，不要帶 repo 路徑）。在 `worker/` 執行 `npx wrangler secret put GEMINI_API_KEY`，然後 `npx wrangler deploy`。
-4. 修改 `js/config.js` 的 `API_BASE`，填入部署完成的 Worker 網址，提交至 GitHub。
-5. 在網站確認自選股行情、價格提醒與 AI 聊天。
+## 1. AI 聊天查詢
 
-### Colab Secrets
-Notebook 使用 Colab Secrets 名稱 `Gemini`，只做 Colab API 測試；**不會**把該 Secret 輸出到網站或 GitHub。部署 Worker 時仍需單獨輸入 API Key 作為 Worker Secret。
+在左側聊天視窗輸入想詢問的股票資訊，按下「送出」，AI 便會根據取得的行情資料進行回答。
 
-## 已知限制
-- 資料為 TWSE 每日資料，非盤中即時價格；原始資料可能不含日期，則不顯示推定日期。
-- 自選股及提醒只保存在當前瀏覽器，沒有跨裝置同步。
-- 未部署 Worker 時不能取得股票行情與 AI 回覆。
-- Worker 的 CORS 限制不是身分驗證，若要長期公開需加入速率限制、用量保護。
-- 部分股票代碼可能不在上市股票 API 的範圍內。
-- AI 摘要僅供教育與資訊整理，不構成投資建議。
+例如：
+- 「0050 的收盤價是多少？」
+- 「幫我整理目前觀察清單的股票狀況。」
+- 「台積電最近的股價表現如何？」
 
-## AI 協作規則
-新增功能前請先閱讀 `AGENTS.md`，保持一致的檔案結構、資料來源與 UI 風格。
+AI 回覆僅供資訊參考，並非投資建議。
+
+## 2. 自選股觀察清單
+
+在右側「我的觀察清單」中，輸入股票代碼，例如 `2330` 或 `0050`，點選「＋新增」即可加入。
+
+點選「更新」可以重新取得最新可用的行情資料，並顯示股票名稱、價格及資料日期。
+
+若不再需要追蹤某檔股票，可以點選旁邊的「×」移除。
+
+## 3. 股票價格提醒
+
+在右下方「價格提醒」區域：
+
+1. 選擇想觀察的股票。
+2. 選擇「低於或等於」或「高於或等於」的價格條件。
+3. 輸入目標價格。
+4. 點選「新增提醒」。
+
+當網站開啟或更新行情時，系統會檢查是否符合設定條件，並在畫面上顯示提醒狀態。
+
+目前尚未支援關閉網頁後的自動推播通知。
+
+## 4. 使用注意事項
+
+- 股票行情來自證交所 OpenAPI，並非即時報價，請留意畫面上的資料日期。
+- 股票觀察清單與提醒條件保存在目前瀏覽器中，更換裝置或清除瀏覽器資料後，可能無法保留。
+- 若 Gemini API 暫時繁忙，可能出現 HTTP 503 錯誤，可以稍後再重新詢問。
+- 即使 AI 暫時無法回覆，仍可使用自選股及價格提醒功能（行情更新仍需資料服務正常）。
+
+## 5. 後續預計擴充
+
+目前已完成基本的股票查詢、AI 聊天、自選股管理及價格提醒。未來預計增加 AI 服務的自動重試、備用模型切換、股票比較與主動通知等功能，讓股票觀察員更加完整。
