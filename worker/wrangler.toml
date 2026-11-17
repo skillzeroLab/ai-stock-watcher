@@ -1,0 +1,7 @@
+name = "ai-stock-watcher-api"
+main = "index.js"
+compatibility_date = "2026-11-01"
+
+[vars]
+SITE_ORIGIN = "https://你的帳號.github.io"
+GEMINI_MODEL = "gemini-2.5-flash"
